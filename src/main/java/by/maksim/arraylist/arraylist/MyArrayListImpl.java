@@ -1,4 +1,4 @@
-package by.maksim.arraylist;
+package by.maksim.arraylist.arraylist;
 
 import java.util.Iterator;
 
@@ -17,7 +17,7 @@ public class MyArrayListImpl<E> implements MyArrayList<E> {
 
     private E[] values;
 
-    MyArrayListImpl() {
+    public MyArrayListImpl() {
         values = (E[]) new Object[0];
     }
 
