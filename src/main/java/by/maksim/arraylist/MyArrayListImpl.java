@@ -1,4 +1,4 @@
-package by.maksim.arraylist.arraylist;
+package by.maksim.arraylist;
 
 import java.util.Iterator;
 

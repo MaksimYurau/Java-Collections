@@ -1,4 +1,4 @@
-package by.maksim.arraylist.arraylist;
+package by.maksim.arraylist;
 
 public interface MyArrayList<E> extends Iterable<E> {
     boolean add(E e);

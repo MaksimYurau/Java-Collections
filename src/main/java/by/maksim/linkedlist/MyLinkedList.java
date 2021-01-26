@@ -1,4 +1,4 @@
-package by.maksim.arraylist.linkedlist;
+package by.maksim.linkedlist;
 
 public interface MyLinkedList<E> {
     void addFirst(E e);

@@ -1,4 +1,4 @@
-package by.maksim.arraylist.linkedlist;
+package by.maksim.linkedlist;
 
 import java.util.Iterator;
 
