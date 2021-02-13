@@ -38,6 +38,27 @@ public class MyTreeSet<E> implements MyTree<E> {
         }
     }
 
+    private Leaf<E> findLastLeaf(Leaf<E> oldLeaf, Leaf<E> newLeaf) {
+
+        Leaf<E> lastLeaf = oldLeaf;
+        int compare = oldLeaf.compareTo(newLeaf);
+
+        if (compare < 0 && oldLeaf.right != null) {
+            lastLeaf = findLastLeaf(oldLeaf.right, newLeaf);
+            return lastLeaf;
+        }
+
+        if (compare > 0 && oldLeaf.left != null) {
+            lastLeaf = findLastLeaf(oldLeaf.left, newLeaf);
+            return lastLeaf;
+        }
+
+        if (compare == 0) {
+            return null;
+        }
+        return lastLeaf;
+    }
+
     private Leaf<E> search(Leaf<E> leaf, Leaf<E> eLeaf) {
         int compare = leaf.compareTo(eLeaf);
 
