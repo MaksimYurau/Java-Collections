@@ -14,6 +14,10 @@ public class MyTreeSet<E> implements MyTree<E> {
         this.list = list;
     }
 
+    public MyTreeSet() {
+
+    }
+
     @Override
     public boolean add(E e) {
         if (size == 0) {
@@ -84,7 +88,10 @@ public class MyTreeSet<E> implements MyTree<E> {
 
     @Override
     public List<E> get() {
-        return null;
+        for (E e: this) {
+            list.add(e);
+        }
+        return list;
     }
 
     @Override
@@ -94,25 +101,79 @@ public class MyTreeSet<E> implements MyTree<E> {
 
     @Override
     public Leaf<E> find(E e) {
-        return null;
+        Leaf<E> eLeaf = new Leaf<>(e);
+        return search(root, eLeaf);
     }
 
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
             int count = 0;
+            Iterator<Leaf<E>> iterator = new TreeIterator<>(root);
 
             @Override
             public boolean hasNext() {
-                return false;
+                return iterator.hasNext();
             }
 
             @Override
             public E next() {
                 count++;
-                return null;
+                return iterator.next().element;
             }
         };
+    }
+
+    private static class TreeIterator<E> implements Iterator<Leaf<E>> {
+        private Leaf<E> next;
+
+        public TreeIterator(Leaf<E> root) {
+            next = root;
+            goToLeftMost();
+        }
+
+        private void goToLeftMost() {
+            while (next.left != null) {
+                next = next.left;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null && next.element != null;
+        }
+
+        @Override
+        public Leaf<E> next() {
+            Leaf<E> r = next;
+
+            if (next.right != null)
+                return goRight(r);
+            return goUp(r);
+        }
+
+        private Leaf<E> goRight(Leaf<E> r) {
+            next = next.right;
+            while (next.left != null) {
+                next = next.left;
+            }
+            return r;
+        }
+
+        private Leaf<E> goUp(Leaf<E> r) {
+            while (true) {
+                if (next.parent == null) {
+                    next = null;
+                    return r;
+                }
+
+                if (next.parent == next) {
+                    next = next.parent;
+                    return r;
+                }
+                next = next.parent;
+            }
+        }
     }
 
     @Override
@@ -187,6 +248,18 @@ public class MyTreeSet<E> implements MyTree<E> {
 
         public void setElement(E element) {
             this.element = element;
+        }
+    }
+
+    public static void main(String[] args) {
+        MyTree<Integer> tree = new MyTreeSet<>();
+        tree.add(1);
+        tree.add(13);
+        tree.add(-21);
+        tree.add(6);
+
+        for (Integer i: tree.get()) {
+            System.out.println(i);
         }
     }
 }
