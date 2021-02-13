@@ -250,16 +250,4 @@ public class MyTreeSet<E> implements MyTree<E> {
             this.element = element;
         }
     }
-
-    public static void main(String[] args) {
-        MyTree<Integer> tree = new MyTreeSet<>();
-        tree.add(1);
-        tree.add(13);
-        tree.add(-21);
-        tree.add(6);
-
-        for (Integer i: tree.get()) {
-            System.out.println(i);
-        }
-    }
 }
