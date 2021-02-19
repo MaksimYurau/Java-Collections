@@ -1,67 +1,77 @@
 package by.maksim.hashmap;
 
-import java.util.Objects;
+public class MyHashMapImpl implements MyHashMap {
+    private static final int SIZE = 16;
 
-public class MyHashMapImpl<K, V> implements MyHashMap<K, V> {
-    private int capacity = 10;
-    private MyHashMapBucket[] bucket;
-    private int size = 0;
+    private Entry[] table = new Entry[SIZE];
 
-    public MyHashMapImpl() {
-        this.bucket = new MyHashMapBucket[capacity];
+    static class Entry {
+        final String key;
+        String value;
+        Entry next;
+
+        Entry(String k, String v) {
+            key = k;
+            value = v;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
     }
-    private int getHash(K key) {
-        return (key.hashCode() & 0xfffffff) % capacity;
-    }
 
-    private MyKeyValueEntry<K, V> getEntry(K key) {
-        int hash = getHash(key);
-        for (int i = 0; i < bucket[hash].getEntries().size(); i++) {
-            MyKeyValueEntry<K, V> myKeyValueEntry = bucket[hash].getEntries().get(i);
-            if(myKeyValueEntry.getKey().equals(key)) {
-                return myKeyValueEntry;
+    public Entry get(String k) {
+        int hash = k.hashCode() % SIZE;
+        Entry e = table[hash];
+
+        while (e != null) {
+            if (e.key.equals(k)) {
+                return e;
             }
+            e = e.next;
         }
         return null;
     }
 
-    @Override
-    public void put(K key, V value) {
-        if(containsKey(key)) {
-            MyKeyValueEntry<K, V> entry = getEntry(key);
-            entry.setValue(value);
-        } else {
-            int hash = getHash(key);
-            if(bucket[hash] == null) {
-                bucket[hash] = new MyHashMapBucket();
+    public void put(String k, String v) {
+        int hash = k.hashCode() % SIZE;
+        Entry e = table[hash];
+
+        if (e != null) {
+            if (e.key.equals(k)) {
+                e.value = v;
+            } else {
+                while (e.next != null) {
+                    e = e.next;
+                }
+                e.next = new Entry(k, v);
             }
-            bucket[hash].addEntry(new MyKeyValueEntry<>(key, value));
-            size++;
+        } else {
+            Entry entryInNewBucket = new Entry(k, v);
+            table[hash] = entryInNewBucket;
         }
     }
 
-    @Override
-    public V get(K key) {
-        return containsKey(key) ? (V) getEntry(key).getValue() : null;
-    }
+    public static void main(String[] args) {
+        MyHashMapImpl myHashMapImpl = new MyHashMapImpl();
 
-    @Override
-    public boolean containsKey(K key) {
-        int hash = getHash(key);
-        return !(Objects.isNull(bucket[hash]) || Objects.isNull(getEntry(key)));
-    }
+        myHashMapImpl.put("Test", "test");
+        myHashMapImpl.put("Test1", "test1");
+        myHashMapImpl.put("Test2", "test2");
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public void delete(K key) {
-        if(containsKey(key)) {
-            int hash = getHash(key);
-            bucket[hash].removeEntry(getEntry(key));
-            size--;
-        }
+        Entry test = myHashMapImpl.get("Test");
+        System.out.println("" + test.getValue());
+        Entry test1 = myHashMapImpl.get("Test1");
+        System.out.println("" + test1.getValue());
+        Entry test2 = myHashMapImpl.get("Test2");
+        System.out.println("" + test2.getValue());
     }
 }
